@@ -1,12 +1,16 @@
-<!-- templates/ad_detail.html -->
-{% extends 'ads/base.html' %}
+<!-- templates/ads/ad_detail.html -->
+{% extends 'base.html' %}
 
 {% block title %}{{ ad.title }}{% endblock %}
 
 {% block content %}
 <h2>{{ ad.title }}</h2>
-<img src="{{ ad.image_url }}" class="img-fluid" alt="{{ ad.title }}">
+
+{% if ad.image %}
+    <img src="{{ ad.image.url }}" class="img-fluid" alt="{{ ad.title }}" />
+{% endif %}
+
 <p>{{ ad.description }}</p>
 <p><strong>Цена:</strong> {{ ad.price }} ₽</p>
-<p><strong>Контакт:</strong> {{ ad.contact }}</p>
+<p><strong>Категория:</strong> {{ ad.category.name }}</p>
 {% endblock %}

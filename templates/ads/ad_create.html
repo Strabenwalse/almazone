@@ -1,5 +1,5 @@
 <!-- templates/ad_create.html -->
-{% extends 'ads/base.html' %}
+{% extends 'ads/../base.html' %}
 
 {% block title %}Добавить объявление{% endblock %}
 
@@ -8,22 +8,8 @@
 
 <form method="POST">
     {% csrf_token %}
-    <div class="form-group">
-        <label for="title">Заголовок</label>
-        <input type="text" class="form-control" id="title" name="title" required>
-    </div>
-    <div class="form-group">
-        <label for="description">Описание</label>
-        <textarea class="form-control" id="description" name="description" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="price">Цена</label>
-        <input type="number" class="form-control" id="price" name="price" required>
-    </div>
-    <div class="form-group">
-        <label for="contact">Контакт</label>
-        <input type="text" class="form-control" id="contact" name="contact" required>
-    </div>
+      {{ form.as_p }}
+
     <button type="submit" class="btn btn-primary">Добавить</button>
 </form>
 {% endblock %}
