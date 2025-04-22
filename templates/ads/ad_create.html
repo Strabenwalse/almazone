@@ -1,15 +1,31 @@
-<!-- templates/ad_create.html -->
-{% extends 'ads/../base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Добавить объявление{% endblock %}
+{% block title %}
+    {% if ad %}
+        Редактирование объявления: {{ ad.title }}
+    {% else %}
+        Создание нового объявления
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-<h2>Добавить объявление</h2>
+    <h2>
+        {% if ad %}
+            Редактирование объявления: {{ ad.title }}
+        {% else %}
+            Создание нового объявления
+        {% endif %}
+    </h2>
 
-<form method="POST">
-    {% csrf_token %}
-      {{ form.as_p }}
-
-    <button type="submit" class="btn btn-primary">Добавить</button>
-</form>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+            {% if ad %}
+                Сохранить изменения
+            {% else %}
+                Создать объявление
+            {% endif %}
+        </button>
+    </form>
 {% endblock %}

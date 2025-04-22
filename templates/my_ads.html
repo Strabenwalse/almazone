@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мои объявления{% endblock %}
+
+{% block content %}
+<h2>Мои объявления</h2>
+
+<!-- Если нет объявлений -->
+{% if ads %}
+    <div class="row">
+        {% for ad in ads %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if ad.image %}
+                        <img class="card-img-top" src="{{ ad.image.url }}" alt="Image for {{ ad.title }}">
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'default_image.jpg' %}" alt="Default image">
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ ad.title }}</h5>
+                        <p class="card-text">{{ ad.description|truncatewords:20 }}</p>
+
+                        <!-- Ссылка на страницу с детальным описанием объявления -->
+                        <a href="{% url 'ad_detail' ad.id %}" class="btn btn-primary mt-auto">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>У вас нет объявлений. <a href="{% url 'ad_create' %}">Создайте первое объявление</a>.</p>
+{% endif %}
+
+{% endblock %}

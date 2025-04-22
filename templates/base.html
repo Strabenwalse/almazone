@@ -1,5 +1,6 @@
 <!-- templates/base.html -->
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -30,7 +31,9 @@
                     <a class="nav-link" href="/">Главная</a>
                 </li>
                 <li class="nav-item">
-                 <a class="nav-link" href="{% url 'ad_create' %}">Добавить объявление</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти</a>
+                {% endif %}
 
                 </li>
             </ul>

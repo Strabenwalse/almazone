@@ -1,5 +1,5 @@
-<!-- templates/ads/ad_detail.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ ad.title }}{% endblock %}
 
@@ -7,10 +7,13 @@
 <h2>{{ ad.title }}</h2>
 
 {% if ad.image %}
-    <img src="{{ ad.image.url }}" class="img-fluid" alt="{{ ad.title }}" />
+    <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="img-fluid">
+{% else %}
+    <p>Изображение отсутствует</p>
 {% endif %}
 
 <p>{{ ad.description }}</p>
-<p><strong>Цена:</strong> {{ ad.price }} ₽</p>
+<p>Цена: {{ ad.price }} ₸</p>
 <p><strong>Категория:</strong> {{ ad.category.name }}</p>
+
 {% endblock %}
