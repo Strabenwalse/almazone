@@ -7,8 +7,9 @@ from django.conf.urls.static import static
 from . import views
 from django.contrib.auth import views as auth_views
 from .views import ad_create
-
+from sitte.views import ad_list
 urlpatterns = [
+    path('', ad_list, name='index'),
     path('', views.ad_list, name='ad_list'),
     path('create/', ad_create, name='ad_create'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

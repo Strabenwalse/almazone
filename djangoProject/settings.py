@@ -11,9 +11,17 @@ ALLOWED_HOSTS = []
 MEDIA_URL = '/media/'  # URL, по которому будут доступны медиа-файлы
 MEDIA_ROOT = BASE_DIR / 'media'  # Путь к папке, где будут храниться медиа-файлы
 
-# Настройки для статических файлов
-STATIC_URL = '/static/'  # URL для статических файлов
-STATIC_ROOT = BASE_DIR / 'static'  # Папка для статических файлов
+# settings.py
+
+STATIC_URL = '/static/'
+
+# Указываем директорию для статических файлов в процессе разработки
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Путь к папке static в корне проекта
+]
+
+# Указываем папку, куда будут собираться все статические файлы для продакшн
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Эта строка для продакшн-сборки, её использовать не нужно в процессе разработки.
 
 # Убедись, что у тебя настроены правильные пути для шаблонов
 TEMPLATES = [
@@ -42,6 +50,7 @@ INSTALLED_APPS = [
     'sitte',
     'forum',
     'accounts',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

@@ -4,124 +4,52 @@
 {% block title %}Список объявлений{% endblock %}
 
 {% block content %}
-<h2>Список объявлений</h2>
+<h1 class="mb-4">Список объявлений</h1>
 
-<!-- Форма фильтрации и поиска -->
-<form method="GET" id="filter-form" action="{% url 'ad_list' %}" class="mb-4">
-    <div class="row">
-        <!-- Поиск -->
-        <div class="col-md-4 mb-3">
-            <label for="search">Поиск</label>
-            <input type="text" name="q" id="search" class="form-control" value="{{ request.GET.q }}" placeholder="Введите ключевое слово">
-        </div>
-
-        <!-- Категория -->
-        <div class="col-md-4 mb-3">
-            <label for="category">Категория</label>
-            <select name="category" id="category" class="form-control">
-                <option value="">Все категории</option>
-                {% for category in categories %}
-                    <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>
-                        {{ category.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Цена от -->
-        <div class="col-md-2 mb-3">
-            <label for="price_min">Цена от</label>
-            <input type="number" name="price_min" id="price_min" class="form-control" value="{{ price_min }}" placeholder="От">
-        </div>
-
-        <!-- Цена до -->
-        <div class="col-md-2 mb-3">
-            <label for="price_max">Цена до</label>
-            <input type="number" name="price_max" id="price_max" class="form-control" value="{{ price_max }}" placeholder="До">
-        </div>
-
-        <!-- Сортировка -->
-        <div class="col-md-3 mb-3">
-            <label for="sort_by">Сортировка</label>
-            <select name="sort_by" id="sort_by" class="form-control">
-                <option value="date" {% if sort_by == 'date' %}selected{% endif %}>По дате</option>
-                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Цена ↑</option>
-                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Цена ↓</option>
-            </select>
-        </div>
-
-        <!-- Кнопки фильтрации -->
-        <div class="col-md-9 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary me-2">Применить фильтры</button>
-            <a href="{% url 'ad_list' %}" class="btn btn-secondary">Сбросить фильтры</a>
-        </div>
-    </div>
+<form method="get" class="form-inline mb-4">
+    <input type="text" name="query" class="form-control mr-2 mb-2" placeholder="Поиск..." value="{{ request.GET.query }}" autocomplete="off">
+    <input type="number" name="min_price" class="form-control mr-2 mb-2" placeholder="Мин. цена" value="{{ request.GET.min_price }}">
+    <input type="number" name="max_price" class="form-control mr-2 mb-2" placeholder="Макс. цена" value="{{ request.GET.max_price }}">
+    <button type="submit" class="btn btn-primary mb-2">Фильтровать</button>
 </form>
 
-<!-- Список объявлений -->
-<div id="ad-list">
-    <div class="row">
-        {% for ad in ads %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    {% if ad.image %}
-                        <img class="card-img-top" src="{{ ad.image.url }}" alt="Image for {{ ad.title }}">
-                    {% else %}
-                        <img class="card-img-top" src="{% static 'default_image.jpg' %}" alt="Default image">
-                    {% endif %}
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">{{ ad.title }}</h5>
-                        <p class="card-text">{{ ad.description|truncatewords:20 }}</p>
-                        <a href="{% url 'ad_detail' ad.id %}" class="btn btn-primary mt-auto">Подробнее</a>
-                    </div>
-                </div>
+<div class="row">
+    {% for ad in ads %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if ad.image %}
+            <img class="card-img-top" src="{{ ad.image.url }}" alt="{{ ad.title }}">
+            {% else %}
+            <img class="card-img-top" src="{% static 'default_image.jpg' %}" alt="Default image">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ ad.title }}</h5>
+                <p class="card-text">{{ ad.description|truncatechars:100 }}</p>
+                <p class="card-text"><strong>Цена:</strong> {{ ad.price }} ₸</p>
+                <a href="{% url 'ad_detail' ad.pk %}" class="btn btn-primary">Подробнее</a>
             </div>
-        {% empty %}
-            <p>Пока нет объявлений</p>
-        {% endfor %}
+        </div>
     </div>
+    {% empty %}
+    <div class="col-12">
+        <p>Объявлений не найдено.</p>
+    </div>
+    {% endfor %}
 </div>
 
-<!-- Пагинация -->
-{% if ads.has_other_pages %}
-<div class="pagination d-flex justify-content-center mt-4">
-    <nav>
-        <ul class="pagination">
-            {% if ads.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1&category={{ selected_category }}&price_min={{ price_min }}&price_max={{ price_max }}&q={{ request.GET.q }}&sort_by={{ sort_by }}">« Первая</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ ads.previous_page_number }}&category={{ selected_category }}&price_min={{ price_min }}&price_max={{ price_max }}&q={{ request.GET.q }}&sort_by={{ sort_by }}">‹ Назад</a>
-                </li>
-            {% endif %}
-
-            <li class="page-item disabled">
-                <span class="page-link">Страница {{ ads.number }} из {{ ads.paginator.num_pages }}</span>
-            </li>
-
-            {% if ads.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ ads.next_page_number }}&category={{ selected_category }}&price_min={{ price_min }}&price_max={{ price_max }}&q={{ request.GET.q }}&sort_by={{ sort_by }}">Вперёд ›</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ ads.paginator.num_pages }}&category={{ selected_category }}&price_min={{ price_min }}&price_max={{ price_max }}&q={{ request.GET.q }}&sort_by={{ sort_by }}">Последняя »</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-</div>
-{% endif %}
-
-<!-- Добавить объявление -->
-<div class="mt-4">
-    {% if user.is_authenticated %}
-        <a href="{% url 'ad_create' %}" class="btn btn-success">➕ Добавить объявление</a>
-    {% else %}
-        <a href="{% url 'login' %}" class="btn btn-primary">🔐 Войти</a>
-    {% endif %}
-</div>
-
-<script src="{% static 'js/filter.js' %}"></script>
-
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if ads.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ ads.previous_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Назад</a></li>
+        {% endif %}
+        {% for num in ads.paginator.page_range %}
+        <li class="page-item {% if ads.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">{{ num }}</a>
+        </li>
+        {% endfor %}
+        {% if ads.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ ads.next_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Вперёд</a></li>
+        {% endif %}
+    </ul>
+</nav>
 {% endblock %}
