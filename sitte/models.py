@@ -1,27 +1,27 @@
-from django.db import models
+
 from django import forms
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
-from django.urls import reverse
+
+from django.contrib.auth.models import AbstractUser
 
 # Кастомный пользователь
-class CustomUser(AbstractUser):
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
 
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='customuser_set',
-        blank=True
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='customuser_permissions',
-        blank=True
-    )
+from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
+from django.conf import settings
+from accounts.models import CustomUser
 
-    def __str__(self):
-        return self.username
+# Кастомный пользователь
+# models.py
+from django.utils import timezone  # Добавь это
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+
+
+# accounts/forms.py
+
 
 # Модель категории
 class Category(models.Model):
@@ -48,7 +48,7 @@ class Product(models.Model):
 
     @property
     def price_in_kzt(self):
-        return round(self.price * 5.2, 2)  # Примерный курс руб → тенге
+        return round(self.price * 5, 2)  # Примерный курс руб → тенге
 
     def get_absolute_url(self):
         return reverse('product_detail', args=[str(self.id)])
@@ -62,17 +62,20 @@ class Ad(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='ads/', blank=True, null=True)
+    image = models.ImageField(upload_to='ads/', blank=True, null=True)  # Здесь поле image
 
     def __str__(self):
         return self.title
 
+
+
+
     @property
     def price_in_kzt(self):
-        return round(self.price * 5.2, 2)
+        return round(self.price * 5, 2)
 
     def get_absolute_url(self):
         return reverse('ad_detail', args=[str(self.id)])
@@ -92,3 +95,7 @@ class AdForm(forms.ModelForm):
     class Meta:
         model = Ad
         fields = ['title', 'description', 'price', 'category', 'image']
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'first_name_custom', 'last_name_custom']  # Правильные поля

@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 
+from django.contrib.auth.models import AbstractUser
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -20,16 +21,20 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=timezone.now)
+class CustomUser(AbstractUser):
+    first_name_custom = models.CharField("Имя", max_length=100)
+    last_name_custom = models.CharField("Фамилия", max_length=100)
+    phone_number = models.CharField("Телефон", max_length=20, blank=True, null=True)
+    city = models.CharField("Город", max_length=100, blank=True, null=True)
+    profile_picture = models.ImageField("Аватар", upload_to='profile_pictures/', null=True, blank=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
-    objects = CustomUserManager()
+    DARK_THEME = 'dark'
+    LIGHT_THEME = 'light'
+    THEME_CHOICES = [
+        (DARK_THEME, 'Темная'),
+        (LIGHT_THEME, 'Светлая'),
+    ]
+    theme = models.CharField(max_length=5, choices=THEME_CHOICES, default=LIGHT_THEME)
 
     def __str__(self):
-        return self.email
+        return self.username
