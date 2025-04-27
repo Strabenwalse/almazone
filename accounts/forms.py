@@ -8,4 +8,7 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('email',)
 
 class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.EmailField(label='Email')  # заменяем "username" на email
+    username = forms.CharField(
+        label='Username или Email',
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )

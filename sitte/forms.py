@@ -9,6 +9,20 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'first_name_custom', 'last_name_custom', 'profile_picture']
+        labels = {
+            'username': 'Имя пользователя',
+            'email': 'Email',
+            'first_name_custom': 'Имя',
+            'last_name_custom': 'Фамилия',
+            'profile_picture': 'Аватар',
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите имя пользователя'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Введите email'}),
+            'first_name_custom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите имя'}),
+            'last_name_custom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите фамилию'}),
+            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 
 class AdForm(forms.ModelForm):
     class Meta:

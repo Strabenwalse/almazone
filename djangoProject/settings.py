@@ -8,8 +8,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Настройки для медиа файлов
-MEDIA_URL = '/media/'  # URL, по которому будут доступны медиа-файлы
-MEDIA_ROOT = BASE_DIR / 'media'  # Путь к папке, где будут храниться медиа-файлы
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # settings.py
 
@@ -24,6 +24,11 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"  # Эта строка для продакшн-сборки, её использовать не нужно в процессе разработки.
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.EmailOrUsernameModelBackend',  # путь к твоему файлу и классу
+    'django.contrib.auth.backends.ModelBackend',          # стандартный бэкенд тоже оставим
+]
+
 
 # Убедись, что у тебя настроены правильные пути для шаблонов
 TEMPLATES = [
@@ -103,3 +108,4 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+

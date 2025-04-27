@@ -6,6 +6,7 @@
 {% block content %}
 <h1 class="mb-4">Список объявлений</h1>
 
+<!-- Форма фильтрации -->
 <form method="get" class="form-inline mb-4">
     <input type="text" name="query" class="form-control mr-2 mb-2" placeholder="Поиск..." value="{{ request.GET.query }}" autocomplete="off">
     <input type="number" name="min_price" class="form-control mr-2 mb-2" placeholder="Мин. цена" value="{{ request.GET.min_price }}">
@@ -13,14 +14,15 @@
     <button type="submit" class="btn btn-primary mb-2">Фильтровать</button>
 </form>
 
+<!-- Вывод объявлений -->
 <div class="row">
     {% for ad in ads %}
     <div class="col-md-4 mb-4">
         <div class="card h-100">
             {% if ad.image %}
-            <img class="card-img-top" src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                <img class="card-img-top" src="{{ ad.image.url }}" alt="{{ ad.title }}">
             {% else %}
-            <img class="card-img-top" src="{% static 'default_image.jpg' %}" alt="Default image">
+                <img class="card-img-top" src="{% static 'default_image.jpg' %}" alt="Default image">
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ ad.title }}</h5>
@@ -28,7 +30,7 @@
                 <p class="card-text"><strong>Цена:</strong> {{ ad.price }} ₸</p>
                 <a href="{% url 'ad_detail' ad.pk %}" class="btn btn-primary">Подробнее</a>
 
-                <!-- Кнопка для редактирования объявления -->
+                <!-- Кнопка редактирования объявления -->
                 {% if ad.author == request.user %}
                 <a href="{% url 'ad_edit' ad.pk %}" class="btn btn-warning">Редактировать</a>
                 {% endif %}
@@ -42,6 +44,7 @@
     {% endfor %}
 </div>
 
+<!-- Пагинация -->
 <nav aria-label="Page navigation">
     <ul class="pagination">
         {% if ads.has_previous %}

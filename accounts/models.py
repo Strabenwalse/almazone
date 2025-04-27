@@ -26,7 +26,7 @@ class CustomUser(AbstractUser):
     last_name_custom = models.CharField("Фамилия", max_length=100)
     phone_number = models.CharField("Телефон", max_length=20, blank=True, null=True)
     city = models.CharField("Город", max_length=100, blank=True, null=True)
-    profile_picture = models.ImageField("Аватар", upload_to='profile_pictures/', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
     DARK_THEME = 'dark'
     LIGHT_THEME = 'light'

@@ -22,49 +22,48 @@
                         <a class="nav-link" href="{% url 'ad_list' %}">Все объявления</a>
                     </li>
                 </ul>
-               <ul class="navbar-nav ml-auto">
-    {% if user.is_authenticated %}
-        <!-- Кнопка Личный кабинет с аватаром -->
-        <li class="nav-item">
-            <a class="btn btn-outline-secondary mr-2 d-flex align-items-center" href="{% url 'profile' %}">
-                {% if user.avatar %}
-                    <img src="{{ user.avatar.url }}" alt="Аватар" style="width: 24px; height: 24px; object-fit: cover; border-radius: 50%; margin-right: 8px;">
-                {% else %}
-                    <span style="margin-right: 8px;">👤</span>
-                {% endif %}
-                Кабинет
-            </a>
-        </li>
-        <!-- Выход -->
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Выход</a>
-        </li>
-    {% else %}
-        <!-- Вход и Регистрация -->
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Войти</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
-        </li>
-    {% endif %}
-    <!-- Кнопка смены темы -->
-    <li class="nav-item">
-        <button type="button" class="btn btn-outline-primary mr-2 theme-toggle-btn" id="theme-toggle-btn">
-            🌙 Тема
-        </button>
-    </li>
-    <li class="nav-item">
-        <a class="btn btn-success" href="{% url 'ad_create' %}">Добавить объявление</a>
-    </li>
-</ul>
-
+                <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+                        <!-- Кнопка Личный кабинет с аватаром -->
+                        <li class="nav-item">
+                            <a class="btn btn-outline-secondary mr-2 d-flex align-items-center" href="{% url 'profile' %}">
+                                {% if user.avatar %}
+                                    <img src="{{ user.avatar.url }}" alt="Аватар" style="width: 24px; height: 24px; object-fit: cover; border-radius: 50%; margin-right: 8px;">
+                                {% else %}
+                                    <span style="margin-right: 8px;">👤</span>
+                                {% endif %}
+                                Кабинет
+                            </a>
+                        </li>
+                        <!-- Выход -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Выход</a>
+                        </li>
+                    {% else %}
+                        <!-- Вход и Регистрация -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
+                        </li>
+                    {% endif %}
+                    <!-- Кнопка смены темы -->
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-primary mr-2 theme-toggle-btn" id="theme-toggle-btn">
+                            🌙 Тема
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-success" href="{% url 'ad_create' %}">Добавить объявление</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
     <!-- Основной контент -->
-    <div class="container" style="padding-top: 100px;">
+    <div class="container mt-5">
         {% block content %}
         {% endblock %}
     </div>

@@ -1,19 +1,16 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.core.paginator import Paginator
-from django.http import JsonResponse
 from .forms import AdForm, ProductForm
-from .models import Ad, Category
-from django.contrib.auth.decorators import login_required
+from .models import Category
 from django.shortcuts import render, redirect
 from .forms import UserUpdateForm
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-import json
 from .forms import UserEditForm
 from django.contrib.auth import login
+from .models import Ad
+import json
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -50,7 +47,6 @@ def profile_view(request):
         form = UserUpdateForm(instance=request.user)
     return render(request, 'accounts/profile.html', {'form': form})
 # Список объявлений с фильтрацией, сортировкой и AJAX поддержкой
-# Список объявлений с фильтрацией
 def ad_list(request):
     search_query = request.GET.get('q', '')
     category_id = request.GET.get('category', '')
@@ -60,19 +56,35 @@ def ad_list(request):
 
     ads = Ad.objects.all()
 
-    # Преобразуем фильтры в числа, если они присутствуют
+    # Фильтрация по минимальной цене
     if price_min:
-        price_min = float(price_min)
-        ads = ads.filter(price__gte=price_min)
-    if price_max:
-        price_max = float(price_max)
-        ads = ads.filter(price__lte=price_max)
+        try:
+            price_min = float(price_min)
+            ads = ads.filter(price__gte=price_min)
+        except ValueError:
+            pass  # Если некорректное значение, просто пропускаем фильтрацию
 
+    # Фильтрация по максимальной цене
+    if price_max:
+        try:
+            price_max = float(price_max)
+            ads = ads.filter(price__lte=price_max)
+        except ValueError:
+            pass  # Если некорректное значение, просто пропускаем фильтрацию
+
+    # Поиск по запросу
     if search_query:
         ads = ads.filter(title__icontains=search_query)
-    if category_id:
-        ads = ads.filter(category_id=category_id)
 
+    # Фильтрация по категории
+    if category_id:
+        try:
+            category_id = int(category_id)
+            ads = ads.filter(category_id=category_id)
+        except ValueError:
+            pass  # Если некорректное значение, просто пропускаем фильтрацию
+
+    # Сортировка
     if sort_by == 'price_asc':
         ads = ads.order_by('price')
     elif sort_by == 'price_desc':
@@ -80,6 +92,7 @@ def ad_list(request):
     else:
         ads = ads.order_by('-created_at')
 
+    # Пагинация
     paginator = Paginator(ads, 9)
     page = request.GET.get('page', 1)
     ads_page = paginator.get_page(page)
@@ -93,11 +106,11 @@ def ad_list(request):
         'sort_by': sort_by
     }
 
+    # Для AJAX-запросов рендерим только список объявлений
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return render(request, 'partials/ad_items.html', context)
 
     return render(request, 'ads/ad_list.html', context)
-
 
 # Детали объявления
 @login_required
