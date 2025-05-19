@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="{% static 'favicon-dark.ico' %}" media="(prefers-color-scheme: light)" type="image/x-icon">
+  <link rel="icon" href="{% static 'favicon-light.ico' %}" media="(prefers-color-scheme: dark)" type="image/x-icon">
+
+  <meta charset="UTF-8">
+  <title>{% block title %}Мои объявления{% endblock %}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <!-- Навигационная панель -->
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light theme-aware-navbar">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{% url 'ad_list' %}">
+        <img id="logo"
+             src="{% static 'img/site-logo-light.png' %}"
+             data-logo-light="{% static 'img/site-logo-light.png' %}"
+             data-logo-dark="{% static 'img/site-logo-dark.png' %}"
+             alt="Логотип"
+             style="height: 32px; margin-right: 8px;">
+        Almazone
+      </a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ad_list' %}">Все объявления</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="btn btn-outline-secondary mr-2 d-flex align-items-center" href="{% url 'profile' %}">
+                {% if user.avatar %}
+                  <img src="{{ user.avatar.url }}" alt="Аватар" style="width: 24px; height: 24px; object-fit: cover; border-radius: 50%; margin-right: 8px;">
+                {% else %}
+                  <span style="margin-right: 8px;">👤</span>
+                {% endif %}
+                Кабинет
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Выход</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Войти</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-primary mr-2 theme-toggle-btn" id="theme-toggle-btn">
+              🌙 Тема
+            </button>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-success" href="{% url 'ad_create' %}">Добавить объявление</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Основной контент -->
+  <div class="container mt-5">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <!-- Подключение скриптов -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="{% static 'js/theme-toggle.js' %}"></script>
+  <script src="{% static 'js/logo-theme-switch.js' %}"></script>
+</body>
+</html>

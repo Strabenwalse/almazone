@@ -40,3 +40,7 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'first_name', 'last_name']
+class AdImageForm(forms.ModelForm):
+    class Meta:
+        model = Ad
+        fields = ['image']

@@ -1,15 +1,18 @@
 import os
+
+
+
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-jv7s0w986bp=3)xbezcyeez%(oken-53=jq-83vz3$-02noysj'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Настройки для медиа файлов
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # settings.py
 
@@ -17,7 +20,7 @@ STATIC_URL = '/static/'
 
 # Указываем директорию для статических файлов в процессе разработки
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Путь к папке static в корне проекта
+    BASE_DIR / "sitte/static",  # Путь к папке static в корне проекта
 ]
 
 # Указываем папку, куда будут собираться все статические файлы для продакшн
@@ -34,7 +37,7 @@ AUTHENTICATION_BACKENDS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'sitte/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,7 +106,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Дополнительные параметры для аутентификации
-AUTH_USER_MODEL = 'accounts.CustomUser'
+#AUTH_USER_MODEL = 'accounts.CustomUser'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'

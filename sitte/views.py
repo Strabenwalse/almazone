@@ -11,6 +11,9 @@ from .forms import UserEditForm
 from django.contrib.auth import login
 from .models import Ad
 import json
+from django.http import HttpResponseForbidden
+from .forms import AdImageForm
+
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -117,15 +120,14 @@ def ad_list(request):
 def ad_edit(request, pk):
     ad = get_object_or_404(Ad, pk=pk)
 
-    # Проверка, что пользователь является автором объявления
-    if ad.author != request.user:
-        return redirect('ad_list')
+    if request.user != ad.author:
+        return HttpResponseForbidden("У вас нет прав на редактирование этого объявления.")
 
     if request.method == 'POST':
         form = AdForm(request.POST, request.FILES, instance=ad)
         if form.is_valid():
             form.save()
-            return redirect('ad_list')
+            return redirect('ad_detail', pk=ad.pk)
     else:
         form = AdForm(instance=ad)
 
@@ -149,12 +151,12 @@ def ad_create(request):
             ad = form.save(commit=False)
             ad.author = request.user
             ad.save()
-            print(f"Загружено изображение: {ad.image.url if ad.image else 'Нет изображения'}")
-            return redirect('ad_list')
+            return redirect('ad_detail', pk=ad.pk)
+        # Ветка else убираем, просто рендерим с текущей формой с ошибками
     else:
         form = AdForm()
-
     return render(request, 'ads/ad_create.html', {'form': form})
+
 
 # Страница с последними объявлениями
 def index(request):
@@ -205,3 +207,17 @@ def register(request):
         form = UserEditForm()
 
     return render(request, 'accounts/register.html', {'form': form})
+
+@login_required
+def ad_image_view(request, ad_id):
+    ad = get_object_or_404(Ad, pk=ad_id)
+    form = AdImageForm(request.POST or None, request.FILES or None, instance=ad)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('ad_detail', ad_id=ad.id)
+
+    return render(request, 'ads/ad_image.html', {
+        'form': form,
+        'ad': ad,  # << ЭТО ОБЯЗАТЕЛЬНО
+    })

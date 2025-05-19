@@ -8,9 +8,11 @@
 
 <!-- Форма фильтрации -->
 <form method="get" class="form-inline mb-4">
-    <input type="text" name="query" class="form-control mr-2 mb-2" placeholder="Поиск..." value="{{ request.GET.query }}" autocomplete="off">
+    <label>
+        <input type="text" name="query" class="form-control mr-2 mb-2" placeholder="Поиск..." value="{{ request.GET.query }}" autocomplete="off">
+
     <input type="number" name="min_price" class="form-control mr-2 mb-2" placeholder="Мин. цена" value="{{ request.GET.min_price }}">
-    <input type="number" name="max_price" class="form-control mr-2 mb-2" placeholder="Макс. цена" value="{{ request.GET.max_price }}">
+    <input type="number" name="max_price" class="form-control mr-2 mb-2" placeholder="Макс. цена" value="{{ request.GET.max_price }}"> </label>
     <button type="submit" class="btn btn-primary mb-2">Фильтровать</button>
 </form>
 

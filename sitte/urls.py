@@ -5,11 +5,13 @@ from django.contrib.auth import views as auth_views
 from django.shortcuts import redirect
 from . import views
 
+
 urlpatterns = [
     path('', lambda request: redirect('ad_list'), name='home'),  # Редирект с главной на список объявлений
-
+    path('ads/<int:pk>/image/', views.ad_image_view, name='ad_image'),
     # Профиль пользователя
     # Профиль пользователя
+    path('ads/<int:ad_id>/image/', views.ad_image_view, name='ad_image_view'),
     path('profile/', views.profile_view, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
 
@@ -31,8 +33,6 @@ urlpatterns = [
 
     # Настройки темы
     path('save-theme/', views.save_theme, name='save_theme'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# Для загрузки медиафайлов в режиме разработки
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

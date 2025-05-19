@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Обновить изображение</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+  </form>
+
+  {% if ad.image %}
+    <p>Текущее изображение:</p>
+    <img src="{{ ad.image.url }}" alt="Изображение" width="300">
+  {% else %}
+    <p>Изображение не загружено.</p>
+  {% endif %}
+{% endblock %}
